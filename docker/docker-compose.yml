@@ -1,6 +1,32 @@
 version: '3.7'
 services:
 
+  prometheus-service:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./files/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    networks:
+      - ntwrk
+
+  prometheus-pushgateway-service:
+    image: prom/pushgateway:latest
+    container_name: pushgateway
+    ports:
+      - 9091:9091
+    networks:
+      - ntwrk
+
+  grafana-service:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    ports:
+      - 2999:3000
+    networks:
+      - ntwrk
+
   redis-service:
     image: redis:latest
     container_name: redis

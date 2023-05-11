@@ -7,6 +7,8 @@ import com.vivy.shortener.exception.InvalidUrlException;
 import com.vivy.shortener.exception.UrlNotFoundException;
 import com.vivy.shortener.model.UrlEntity;
 import com.vivy.shortener.repository.url.UrlRepository;
+import com.vivy.shortener.service.url.metrics.FetchUrlMetric;
+import com.vivy.shortener.service.url.metrics.ShortenUrlMetric;
 import com.vivy.shortener.util.AssertUtil;
 import com.vivy.shortener.util.RandomUtil;
 import jakarta.annotation.PreDestroy;
@@ -27,11 +29,15 @@ public class UrlService {
     private final Scheduler scheduler;
     private final int urlIdLength;
     private final int repositoryRetryOnSave;
+    private final FetchUrlMetric fetchUrlMetric;
+    private final ShortenUrlMetric shortenUrlMetric;
 
 
-    public UrlService(UrlRepository urlRepository, UrlCache urlCache, ShortenerApplicationConfigurations configurations) {
+    public UrlService(UrlRepository urlRepository, UrlCache urlCache, ShortenerApplicationConfigurations configurations, FetchUrlMetric fetchUrlMetric, ShortenUrlMetric shortenUrlMetric) {
         this.urlRepository = urlRepository;
         this.urlCache = urlCache;
+        this.fetchUrlMetric = fetchUrlMetric;
+        this.shortenUrlMetric = shortenUrlMetric;
         int reactorThreadPoolSize = configurations.getUrlRepository().getReactorThreadPoolSize();
         AssertUtil.assertIsPositive(reactorThreadPoolSize, "reactor thread pool size should be positive value");
         this.scheduler = Schedulers.newParallel("jdbc-reactor-pool", reactorThreadPoolSize);
@@ -44,18 +50,20 @@ public class UrlService {
         log.info("in case of error while inserting in database system will retry {} times", this.repositoryRetryOnSave);
     }
 
-    public Mono<String> saveUrl(String originalUrl) {
-        validateOriginalUrl(originalUrl);
+    public Mono<String> saveUrl(String url) {
         if (log.isDebugEnabled()) {
-            log.debug("requested to create short url for [{}]", originalUrl);
+            log.debug("requested to create short url for [{}]", url);
         }
-        return Mono.fromSupplier(() -> urlRepository.save(
+        return Mono.fromSupplier(() -> validateOriginalUrl(url))
+                .map(originalUrl -> urlRepository.save(
                         UrlEntity.builder()
                                 .urlId(RandomUtil.randomAlphaNumericString(urlIdLength))
                                 .originalUrl(originalUrl)
                                 .build()
                 )).subscribeOn(scheduler)
                 .retry(repositoryRetryOnSave)
+                .doOnSuccess(urlEntity -> handleOnSuccessSaveUrl(urlEntity.getUrlId(), url))
+                .doOnError(this::handleOnErrorSaveUrl)
                 .map(UrlEntity::getUrlId);
     }
 
@@ -65,7 +73,7 @@ public class UrlService {
         }
         return urlCache.getUrl(urlId)
                 .doOnSuccess(result -> handleOnSuccessCacheFetching(urlId, result))
-                .doOnError(this::handleErrorOnCacheFetching)
+                .doOnError(this::handleOnErrorCacheFetching)
                 .onErrorReturn(Optional.empty())
                 .flatMap(url -> {
                     if (url.isPresent()) {
@@ -93,16 +101,17 @@ public class UrlService {
                 });
     }
 
-    private void validateOriginalUrl(String originalUrl) {
+    private String validateOriginalUrl(String originalUrl) {
         AssertUtil.assertValidUrl(originalUrl, () -> new InvalidUrlException("Url is not valid"));
         AssertUtil.assertIsValid(originalUrl.length(), len -> len <= 4096, () -> new BigUrlException("Url is too big"));
+        return originalUrl;
     }
 
     private Mono<Optional<String>> getOriginalUrlByUrlIdFromRepositoryAndPutInCache(String urlId) {
         return Mono.fromSupplier(() -> urlRepository.findByUrlId(urlId))
                 .subscribeOn(scheduler)
                 .doOnSuccess(result -> handleOnSuccessDatabaseFetching(urlId, result))
-                .doOnError(this::handleErrorOnDatabaseFetching)
+                .doOnError(this::handleOnErrorDatabaseFetching)
                 .map(o -> o.map(UrlEntity::getOriginalUrl))
                 .flatMap(originalUrl -> saveInCache(urlId, originalUrl));
     }
@@ -129,13 +138,18 @@ public class UrlService {
                 log.debug("url fetched from database failed, url-id is {}", urlId);
             }
         }
-        //todo user later
+        if (url.isPresent()) {
+            fetchUrlMetric.captureDatabaseFetchingSuccess();
+        } else {
+            fetchUrlMetric.captureDatabaseFetchingNotFound();
+        }
     }
 
-    private void handleErrorOnDatabaseFetching(Throwable e) {
+    private void handleOnErrorDatabaseFetching(Throwable e) {
         if (log.isErrorEnabled()) {
             log.error("error while fetching url from database", e);
         }
+        fetchUrlMetric.captureDatabaseFetchingFail();
     }
 
     private void handleOnSuccessCacheFetching(String urlId, Optional<String> url) {
@@ -146,12 +160,32 @@ public class UrlService {
                 log.debug("url fetched from database failed, url-id is {}", urlId);
             }
         }
+        if (url.isPresent()) {
+            fetchUrlMetric.captureCacheFetchingSuccess();
+        } else {
+            fetchUrlMetric.captureCacheFetchingNotFound();
+        }
     }
 
-    private void handleErrorOnCacheFetching(Throwable e) {
+    private void handleOnErrorCacheFetching(Throwable e) {
         if (log.isErrorEnabled()) {
             log.error("error while fetching url from cache", e);
         }
+        fetchUrlMetric.captureCacheFetchingFail();
+    }
+
+    private void handleOnSuccessSaveUrl(String urlId, String originalUrl) {
+        if (log.isDebugEnabled()) {
+            log.debug("url fetched from cache successfully, url-id is {} and original-url is {}", urlId, originalUrl);
+        }
+        shortenUrlMetric.captureShortenUrlSuccess();
+    }
+
+    private void handleOnErrorSaveUrl(Throwable e) {
+        if (log.isErrorEnabled()) {
+            log.error("error while save url", e);
+        }
+        shortenUrlMetric.captureShortenUrlFail();
     }
 
     @PreDestroy

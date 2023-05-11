@@ -33,29 +33,36 @@ public class UrlShortenerService {
         this.baseUrlWithSlash = baseUrl + "/";
     }
 
-    public Mono<String> createShortUrl(String url) {
-        if (url != null && url.startsWith(this.baseUrl)) {
-            throw new InvalidUrlException("Url can not refer to this website");
-        }
-        return urlService.saveUrl(url)
-                .map(this::getFullUrl);
+    public Mono<String> createShortUrl(String originalUrl) {
+        return Mono.fromSupplier(() -> validateOriginalUrlShouldNotReferToThisServer(originalUrl))
+                .flatMap(url -> urlService.saveUrl(url).map(this::getFullUrl));
     }
 
     public Mono<String> getOriginalUrlByUrlId(String urlId) {
         return urlService.getOriginalUrlByUrlId(urlId);
     }
 
-    public Mono<String> getOriginalUrlByShortUrl(String url) {
-        if (!urlPattern.matcher(url).matches()) {
-            throw new InvalidUrlException(url);
-        }
-        String urlId = url.replace(baseUrlWithSlash, "");
-        return getOriginalUrlByUrlId(urlId);
+    public Mono<String> getOriginalUrlByShortUrl(String shortUrl) {
+        return Mono.fromSupplier(() -> getUrlIdFromShortUrl(shortUrl))
+                .flatMap(this::getOriginalUrlByUrlId);
     }
 
     private String getFullUrl(String urlId) {
         return baseUrl + "/" + urlId;
     }
 
+    private String validateOriginalUrlShouldNotReferToThisServer(String url) {
+        if (url != null && url.startsWith(this.baseUrl)) {
+            throw new InvalidUrlException("Url can not refer to this website");
+        }
+        return url;
+    }
+
+    private String getUrlIdFromShortUrl(String shortUrl) {
+        if (!urlPattern.matcher(shortUrl).matches()) {
+            throw new InvalidUrlException("Invalid short-url");
+        }
+        return shortUrl.replace(baseUrlWithSlash, "");
+    }
 
 }

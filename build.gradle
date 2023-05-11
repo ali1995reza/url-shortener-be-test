@@ -28,6 +28,9 @@ dependencies {
     implementation 'com.google.guava:guava:31.1-jre'
     implementation 'org.redisson:redisson:3.21.0'
     implementation 'commons-validator:commons-validator:1.7'
+    implementation 'io.micrometer:micrometer-registry-prometheus:1.11.0'
+    implementation 'io.prometheus:client:0.0.10'
+    implementation 'io.prometheus:simpleclient_pushgateway:0.16.0'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'

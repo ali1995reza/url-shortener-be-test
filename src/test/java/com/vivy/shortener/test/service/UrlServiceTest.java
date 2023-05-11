@@ -1,6 +1,6 @@
 package com.vivy.shortener.test.service;
 
-import com.vivy.shortener.ShortenerApplication;
+import com.vivy.shortener.UrlShortenerApplication;
 import com.vivy.shortener.exception.BigUrlException;
 import com.vivy.shortener.exception.InvalidUrlException;
 import com.vivy.shortener.service.url.UrlCache;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
-@SpringBootTest(classes = {ShortenerApplication.class, ObserverUrlRepository.class})
+@SpringBootTest(classes = {UrlShortenerApplication.class, ObserverUrlRepository.class})
 public class UrlServiceTest {
 
     @Autowired
@@ -92,14 +92,14 @@ public class UrlServiceTest {
     @Test
     public void testInvalidOriginalUrlThrowsException() {
         assertThrows(InvalidUrlException.class, () -> {
-            urlService.saveUrl("invalid_url");
+            urlService.saveUrl("invalid_url").block();
         });
     }
 
     @Test
     public void testBigOriginalUrlThrowsException() {
         assertThrows(BigUrlException.class, () -> {
-            urlService.saveUrl("https://www.google.com?q=" + createBigString('s', 4096));
+            urlService.saveUrl("https://www.google.com?q=" + createBigString('s', 4096)).block();
         });
     }
 

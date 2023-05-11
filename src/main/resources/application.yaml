@@ -20,6 +20,19 @@ spring:
     jpa:
       database-platform: org.hibernate.dialect.DerbyDialect
 
+management:
+  prometheus:
+    metrics:
+      export:
+        pushgateway:
+          enabled: ${METRICS_PROMETHEUS_PUSH_GATEWAY_ENABLED:true}
+          base-url: ${METRICS_PROMETHEUS_PUSH_GATEWAY_ADDRESS:http://localhost:9091}
+          push-rate: 5s
+          username: ${METRICS_PROMETHEUS_PUSH_GATEWAY_USERNAME:${null}}
+          password: ${METRICS_PROMETHEUS_PUSH_GATEWAY_PASSWORD:${null}}
+          shutdown-operation: push
+          job: ${METRICS_PROMETHEUS_PUSH_GATEWAY_JOB_NAME:url-shortener-app}
+
 short-url-app:
   url-repository:
     retry-on-save: ${URL_REPOSITORY_RETRY_ON_SAVE:3}
