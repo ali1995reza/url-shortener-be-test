@@ -4,3 +4,14 @@ management:
       export:
         pushgateway:
           enabled: false
+
+spring:
+  datasource:
+    url: jdbc:derby:memory:short_url_app_db;create=true
+    driver-class-name: org.apache.derby.iapi.jdbc.AutoloadedDriver
+    username:
+    password:
+    jpa:
+      database-platform: org.hibernate.dialect.DerbyDialect
+  liquibase:
+    enabled: false

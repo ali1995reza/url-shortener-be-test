@@ -13,12 +13,19 @@ spring:
   application:
     name: short-url
   datasource:
-    url: jdbc:derby:memory:shortener_app_db;create=true
-    driver-class-name: org.apache.derby.iapi.jdbc.AutoloadedDriver
-    username:
-    password:
-    jpa:
-      database-platform: org.hibernate.dialect.DerbyDialect
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:short_url_app_db}?ssl=${DB_SSL:false}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+    hikari:
+      pool-name: Hikari
+      minimum-idle: ${HIKARI_MIN_IDLE:10}
+      maximum-pool-size: ${HIKARI_THREAD_POOL_SIZE:20}
+      max-lifetime: ${HIKARI_MAX_LIFETIME:600000}
+      connection-timeout: ${HIKARI_CONNECTION_TIMEOUT:2000}
+  liquibase:
+    change-log: classpath:liquibase/master.xml
+    enabled: ${LIQUIBASE_ENABLED:true}
 
 management:
   prometheus:

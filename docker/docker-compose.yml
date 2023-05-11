@@ -1,6 +1,19 @@
 version: '3.7'
 services:
 
+  postgresql-service:
+    image: postgres:9.4
+    container_name: postgresql
+    environment:
+      POSTGRES_DATABASE: 'postgres'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      PGDATA: '/var/lib/postgresql/data/pgdata'
+    ports:
+      - 5432:5432
+    networks:
+      - ntwrk
+
   prometheus-service:
     image: prom/prometheus:latest
     container_name: prometheus
