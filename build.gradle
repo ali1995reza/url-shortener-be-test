@@ -1,19 +1,30 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.8'
+    id 'org.springframework.boot' version '3.0.6'
+    id 'io.spring.dependency-management' version '1.1.0'
 }
 
-apply plugin: 'io.spring.dependency-management'
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group 'com.vivy'
+version '0.0.1'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+
+    implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-webflux')
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation 'org.apache.derby:derby:10.16.1.1'
+
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('io.projectreactor:reactor-test')
 }

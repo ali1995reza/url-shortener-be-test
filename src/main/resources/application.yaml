@@ -1,2 +1,21 @@
 server:
-  port: 9000
+  port: ${SERVER_PORT:9000}
+  address: ${SERVER_HOST:localhost}
+  ssl:
+    key-store: ${SERVER_SSL_KEY_STORE}
+    key-store-type: ${SERVER_SSL_KEY_STORE_TYPE}
+    key-store-password: ${SERVER_SSL_KEY_STORE_PASSWORD}
+    key-password: ${SERVER_SSL_KEY_PASSWORD}
+    key-alias: ${SERVER_SSL_KEY_ALIAS}
+    enabled: ${SERVER_SSL_ENABLED:false}
+
+spring:
+  application:
+    name: short-url
+  datasource:
+    url: jdbc:derby:memory:short_url_app_db;create=true
+    driver-class-name: org.apache.derby.iapi.jdbc.AutoloadedDriver
+    username:
+    password:
+    jpa:
+      database-platform: org.hibernate.dialect.DerbyDialect
