@@ -13,9 +13,23 @@ spring:
   application:
     name: short-url
   datasource:
-    url: jdbc:derby:memory:short_url_app_db;create=true
+    url: jdbc:derby:memory:shortener_app_db;create=true
     driver-class-name: org.apache.derby.iapi.jdbc.AutoloadedDriver
     username:
     password:
     jpa:
       database-platform: org.hibernate.dialect.DerbyDialect
+
+short-url-app:
+  url-repository:
+    retry-on-save: ${URL_REPOSITORY_RETRY_ON_SAVE:3}
+    url-id-length: ${URL_REPOSITORY_URL_ID_LENGTH:8}
+    reactor-thread-pool-size: ${URL_REPOSITORY_REACTOR_THREAD_POOL_SIZE:10}
+  url-cache:
+    type: ${URL_CACHE_TYPE:in_memory}
+    properties:
+      in-memory-size: ${URL_CACHE_IN_MEMORY_SIZE:1000}
+      in-memory-max-valid-duration: ${URL_CACHE_IN_MEMORY_MAX_VALID_DURATION:30s}
+      redis-address: ${URL_CACHE_REDIS_ADDRESS:redis://localhost:6379}
+      redis-password: ${URL_CACHE_REDIS_PASSWORD:redispassword}
+      redis-connection-pool-size: ${URL_CACHE_REDIS_CONNECTION_POOL_SIZE:20}

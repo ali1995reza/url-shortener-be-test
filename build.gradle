@@ -18,15 +18,19 @@ repositories {
 
 dependencies {
 
-    implementation('org.springframework.boot:spring-boot-starter-web')
-    implementation('org.springframework.boot:spring-boot-starter-webflux')
-    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
-    implementation 'org.apache.derby:derby:10.16.1.1'
-
     compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
-    testImplementation('io.projectreactor:reactor-test')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.apache.derby:derby:10.16.1.1'
+    implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'org.redisson:redisson:3.21.0'
+    implementation 'commons-validator:commons-validator:1.7'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
 }
 
 test {
