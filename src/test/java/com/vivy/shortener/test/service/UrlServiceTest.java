@@ -15,6 +15,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
+import static com.vivy.shortener.test.service.TestData.TEST_ORIGINAL_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,8 +23,6 @@ import static org.mockito.ArgumentMatchers.eq;
 
 @SpringBootTest(classes = {ShortenerApplication.class, ObserverUrlRepository.class})
 public class UrlServiceTest {
-
-    private final static String TEST_ORIGINAL_URL = "https://www.google.com";
 
     @Autowired
     private UrlService urlService;
