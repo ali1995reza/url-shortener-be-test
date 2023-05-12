@@ -14,7 +14,6 @@ services:
     networks:
       - main_bridge
 
-
   elasticsearch-service:
     image: elasticsearch:8.7.1
     container_name: elasticsearch
