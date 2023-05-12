@@ -1,5 +1,6 @@
 package com.vivy.shortener.test.service;
 
+import com.vivy.shortener.UrlShortenerApplication;
 import com.vivy.shortener.exception.BigUrlException;
 import com.vivy.shortener.exception.InvalidUrlException;
 import com.vivy.shortener.exception.UrlNotFoundException;
@@ -25,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
-@SpringBootTest
+@SpringBootTest(classes = UrlShortenerApplication.class)
 public class UrlServiceTest extends BaseTest {
 
     @Autowired
@@ -113,6 +114,24 @@ public class UrlServiceTest extends BaseTest {
         assertThrows(BigUrlException.class, () -> {
             urlService.saveUrl("https://www.google.com?q=" + createBigString('s', 4096)).block();
         });
+    }
+
+    @Test
+    public void testDeleteUrlByUrlId() {
+        Mockito.when(mockCache.saveUrl(any(), any())).thenReturn(Mono.just(true));
+        Mockito.when(mockCache.deleteUrl(any())).thenReturn(Mono.just(true));
+        Mockito.when(mockCache.getUrl(any())).thenReturn(Mono.just(Optional.empty()));
+
+        String urlId = urlService.saveUrl(TEST_ORIGINAL_URL).block();
+
+        Boolean deleted = urlService.deleteUrlByUrlId(urlId).block();
+
+        assertThat(deleted).isTrue();
+
+        assertThrows(UrlNotFoundException.class, ()->{
+            urlService.getOriginalUrlByUrlId(urlId).block();
+        });
+
     }
 
 

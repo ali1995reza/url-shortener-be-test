@@ -1,5 +1,6 @@
 package com.vivy.shortener.test.service;
 
+import com.vivy.shortener.UrlShortenerApplication;
 import com.vivy.shortener.service.shortener.UrlShortenerService;
 import com.vivy.shortener.service.url.metrics.FetchUrlMetric;
 import com.vivy.shortener.service.url.metrics.ShortenUrlMetric;
@@ -10,12 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
+import org.springframework.test.context.ActiveProfiles;
 
 import static com.vivy.shortener.constants.SpringConfigNameConstants.*;
 import static com.vivy.shortener.test.service.TestData.TEST_ORIGINAL_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest(classes = UrlShortenerApplication.class)
 public class UrlShortenerServiceTest extends BaseTest {
 
     @Autowired

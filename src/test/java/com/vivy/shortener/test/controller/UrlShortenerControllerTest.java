@@ -1,6 +1,7 @@
 package com.vivy.shortener.test.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vivy.shortener.UrlShortenerApplication;
 import com.vivy.shortener.controller.urlshortener.dto.CreateShortUrlResponseDto;
 import com.vivy.shortener.exception.base.ExceptionCodes;
 import com.vivy.shortener.service.url.metrics.FetchUrlMetric;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = UrlShortenerApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class UrlShortenerControllerTest extends BaseTest {
 
