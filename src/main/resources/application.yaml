@@ -11,10 +11,10 @@ server:
 
 spring:
   application:
-    name: short-url
+    name: url-shortener
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:short_url_app_db}?ssl=${DB_SSL:false}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:url_shortener_app_db}?ssl=${DB_SSL:false}
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:postgres}
     hikari:
@@ -40,7 +40,7 @@ management:
           shutdown-operation: push
           job: ${METRICS_PROMETHEUS_PUSH_GATEWAY_JOB_NAME:url-shortener-app}
 
-short-url-app:
+url-shortener-app:
   url-repository:
     retry-on-save: ${URL_REPOSITORY_RETRY_ON_SAVE:3}
     url-id-length: ${URL_REPOSITORY_URL_ID_LENGTH:8}

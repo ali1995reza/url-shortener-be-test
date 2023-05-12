@@ -1,7 +1,7 @@
 package com.vivy.shortener.service.url;
 
 
-import com.vivy.shortener.config.ShortenerApplicationConfigurations;
+import com.vivy.shortener.config.UrlShortenerApplicationConfigurations;
 import com.vivy.shortener.exception.BigUrlException;
 import com.vivy.shortener.exception.InvalidUrlException;
 import com.vivy.shortener.exception.UrlNotFoundException;
@@ -33,7 +33,7 @@ public class UrlService {
     private final ShortenUrlMetric shortenUrlMetric;
 
 
-    public UrlService(UrlRepository urlRepository, UrlCache urlCache, ShortenerApplicationConfigurations configurations, FetchUrlMetric fetchUrlMetric, ShortenUrlMetric shortenUrlMetric) {
+    public UrlService(UrlRepository urlRepository, UrlCache urlCache, UrlShortenerApplicationConfigurations configurations, FetchUrlMetric fetchUrlMetric, ShortenUrlMetric shortenUrlMetric) {
         this.urlRepository = urlRepository;
         this.urlCache = urlCache;
         this.fetchUrlMetric = fetchUrlMetric;

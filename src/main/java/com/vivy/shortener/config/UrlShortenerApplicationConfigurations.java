@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Configuration;
 import java.time.Duration;
 
 @Configuration
-@ConfigurationProperties(prefix = "short-url-app", ignoreUnknownFields = false)
+@ConfigurationProperties(prefix = "url-shortener-app", ignoreUnknownFields = false)
 @Data
 @NoArgsConstructor
-public class ShortenerApplicationConfigurations {
+public class UrlShortenerApplicationConfigurations {
 
     private UrlRepository urlRepository;
     private UrlCache urlCache;

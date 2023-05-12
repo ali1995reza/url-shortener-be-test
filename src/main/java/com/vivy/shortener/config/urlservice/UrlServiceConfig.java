@@ -1,7 +1,7 @@
 package com.vivy.shortener.config.urlservice;
 
 import com.google.common.cache.CacheBuilder;
-import com.vivy.shortener.config.ShortenerApplicationConfigurations;
+import com.vivy.shortener.config.UrlShortenerApplicationConfigurations;
 import com.vivy.shortener.service.url.InMemoryUrlCache;
 import com.vivy.shortener.service.url.NoCache;
 import com.vivy.shortener.service.url.RedisUrlCache;
@@ -47,7 +47,7 @@ public class UrlServiceConfig {
         }
     }
 
-    private final ShortenerApplicationConfigurations configurations;
+    private final UrlShortenerApplicationConfigurations configurations;
 
 
     @Bean

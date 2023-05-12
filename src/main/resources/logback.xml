@@ -1,7 +1,7 @@
 <configuration debug="false" scan="false" scanPeriod="2 minutes">
 
     <property name="LOG_LEVEL" value="${logging.level.root}"/>
-    <property name="LOGSTASH_LOG_FILE" value="${LOGSTASH_LOG_FILE:-./docker/files/logstash/logs/short-url-app.log}"/>
+    <property name="LOGSTASH_LOG_FILE" value="${LOGSTASH_LOG_FILE:-./docker/files/logstash/logs/url-shortener-app.log}"/>
     <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n}"/>
 
     <if condition='!property("LOGSTASH_LOG_FILE").equalsIgnoreCase("Disable")'>
@@ -11,7 +11,7 @@
                 <file>${LOGSTASH_LOG_FILE}</file>
                 <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
                     <cleanHistoryOnStart>${LOG_FILE_CLEAN_HISTORY_ON_START:-false}</cleanHistoryOnStart>
-                    <fileNamePattern>/history/short-url-app.%d{yyyy-MM-dd}.%i.tar.gz}</fileNamePattern>
+                    <fileNamePattern>/history/url-shortener-app.%d{yyyy-MM-dd}.%i.tar.gz}</fileNamePattern>
                     <maxFileSize>${LOG_FILE_MAX_SIZE:-100MB}</maxFileSize>
                     <maxHistory>${LOG_FILE_MAX_HISTORY:-7}</maxHistory>
                     <totalSizeCap>${LOG_FILE_TOTAL_SIZE_CAP:-0}</totalSizeCap>
