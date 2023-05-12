@@ -54,6 +54,14 @@ url-shortener-app:
       redis-password: ${URL_CACHE_REDIS_PASSWORD:redispassword}
       redis-connection-pool-size: ${URL_CACHE_REDIS_CONNECTION_POOL_SIZE:20}
 
+springdoc:
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:true}
+  swagger-ui:
+    url: "/v3/api-docs"
+    path: "/swagger"
+    enabled: ${SWAGGER_ENABLED:true}
+
 logging:
   level:
     root: ${LOG_LEVEL:INFO}
