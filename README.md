@@ -13,10 +13,7 @@ To pass environment variables to task you can pass them in this format : `-P[ENV
 **_Note: also you can run the executable jar file directly._**
 
 ## API
-There is 3 routes for rest api:
-
-### Create short url
-Route is : short url
+To see api documentation you can visit `http[s]://domain:[port]/swagger` in your favorite browser.
 
 ## TODO 
 complete full document !
