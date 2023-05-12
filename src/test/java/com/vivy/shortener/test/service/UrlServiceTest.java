@@ -1,11 +1,13 @@
 package com.vivy.shortener.test.service;
 
-import com.vivy.shortener.UrlShortenerApplication;
+import com.vivy.shortener.controller.urlshortener.UrlShortenerController;
 import com.vivy.shortener.exception.BigUrlException;
 import com.vivy.shortener.exception.InvalidUrlException;
 import com.vivy.shortener.exception.UrlNotFoundException;
 import com.vivy.shortener.service.url.UrlCache;
 import com.vivy.shortener.service.url.UrlService;
+import com.vivy.shortener.service.url.metrics.FetchUrlMetric;
+import com.vivy.shortener.service.url.metrics.ShortenUrlMetric;
 import com.vivy.shortener.test.base.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
@@ -24,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
-@SpringBootTest(classes = {UrlShortenerApplication.class, ObserverUrlRepository.class})
+@SpringBootTest
 public class UrlServiceTest extends BaseTest {
 
     @Autowired
@@ -33,6 +36,10 @@ public class UrlServiceTest extends BaseTest {
     private UrlCache mockCache;
     @Autowired
     private ObserverUrlRepository urlRepository;
+    @MockBean
+    private FetchUrlMetric fetchUrlMetric;
+    @MockBean
+    private ShortenUrlMetric shortenUrlMetric;
 
     @BeforeEach
     public void beforeEachTest() {

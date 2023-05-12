@@ -1,9 +1,10 @@
 package com.vivy.shortener.test.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vivy.shortener.UrlShortenerApplication;
 import com.vivy.shortener.controller.urlshortener.dto.CreateShortUrlResponseDto;
 import com.vivy.shortener.exception.base.ExceptionCodes;
+import com.vivy.shortener.service.url.metrics.FetchUrlMetric;
+import com.vivy.shortener.service.url.metrics.ShortenUrlMetric;
 import com.vivy.shortener.test.base.BaseTest;
 import com.vivy.shortener.test.service.TestData;
 import com.vivy.shortener.util.UrlUtil;
@@ -11,8 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -26,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest(classes = {UrlShortenerApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class UrlShortenerControllerTest extends BaseTest {
 
@@ -40,6 +43,10 @@ public class UrlShortenerControllerTest extends BaseTest {
     private Environment environment;
     @Autowired
     private MockMvc mockMvc;
+    @MockBean
+    private FetchUrlMetric fetchUrlMetric;
+    @MockBean
+    private ShortenUrlMetric shortenUrlMetric;
 
     private String baseUrl;
 

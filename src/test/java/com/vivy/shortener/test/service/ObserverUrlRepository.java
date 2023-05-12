@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @Primary
 @Repository
-
 public class ObserverUrlRepository implements UrlRepository {
 
     private final UrlRepository wrapped;
