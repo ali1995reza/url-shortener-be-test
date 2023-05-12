@@ -2,6 +2,7 @@ package com.vivy.shortener.test.service;
 
 import com.vivy.shortener.UrlShortenerApplication;
 import com.vivy.shortener.service.shortener.UrlShortenerService;
+import com.vivy.shortener.test.base.BaseTest;
 import com.vivy.shortener.util.UrlUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import static com.vivy.shortener.test.service.TestData.TEST_ORIGINAL_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = {UrlShortenerApplication.class, ObserverUrlRepository.class})
-public class UrlShortenerServiceTest {
+public class UrlShortenerServiceTest extends BaseTest {
 
     @Autowired
     private UrlShortenerService urlShortenerService;

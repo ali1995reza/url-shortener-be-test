@@ -6,6 +6,7 @@ import com.vivy.shortener.exception.InvalidUrlException;
 import com.vivy.shortener.exception.UrlNotFoundException;
 import com.vivy.shortener.service.url.UrlCache;
 import com.vivy.shortener.service.url.UrlService;
+import com.vivy.shortener.test.base.BaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -24,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
 @SpringBootTest(classes = {UrlShortenerApplication.class, ObserverUrlRepository.class})
-public class UrlServiceTest {
+public class UrlServiceTest extends BaseTest {
 
     @Autowired
     private UrlService urlService;

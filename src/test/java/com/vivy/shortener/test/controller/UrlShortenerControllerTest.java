@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vivy.shortener.UrlShortenerApplication;
 import com.vivy.shortener.controller.urlshortener.dto.CreateShortUrlResponseDto;
 import com.vivy.shortener.exception.base.ExceptionCodes;
+import com.vivy.shortener.test.base.BaseTest;
 import com.vivy.shortener.test.service.TestData;
 import com.vivy.shortener.util.UrlUtil;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = {UrlShortenerApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class UrlShortenerControllerTest {
+public class UrlShortenerControllerTest extends BaseTest {
 
     private final static String CREATE_SHORT_URL_PATH = "/create-short-url";
     private final static String GET_ORIGINAL_URL_PATH = "/get-original-url";

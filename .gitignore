@@ -3,3 +3,4 @@
 build/
 .gradle/
 derby.log
+docker/files/logstash/logs

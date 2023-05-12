@@ -34,6 +34,9 @@ dependencies {
     implementation 'io.prometheus:simpleclient_pushgateway:0.16.0'
     implementation 'org.postgresql:postgresql:42.6.0'
 
+    implementation 'net.logstash.logback:logstash-logback-encoder:7.3'
+    implementation 'org.codehaus.janino:janino:3.1.9'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.apache.derby:derby:10.16.1.1'
