@@ -13,7 +13,8 @@ services:
       - 5432:5432
     networks:
       - main_bridge
-        
+
+
   elasticsearch-service:
     image: elasticsearch:8.7.1
     container_name: elasticsearch
@@ -36,6 +37,8 @@ services:
   kibana-service:
     image: kibana:8.7.1
     container_name: kibana
+    depends_on:
+      - elasticsearch-service
     ports:
       - 5601:5601
     environment:
