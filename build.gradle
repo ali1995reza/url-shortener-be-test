@@ -56,5 +56,12 @@ bootJar {
 }
 
 task buildspringapp(type: GradleBuild) {
-    tasks = ['clean', 'test', 'bootJar']
+    tasks = ['clean', 'bootJar']
+}
+
+task runspringapp(type: JavaExec, dependsOn: ['buildspringapp']) {
+    project.properties.each { key, value ->
+        environment key, value
+    }
+    classpath = files('/build/spring/url-shortener-app.jar')
 }
