@@ -2,8 +2,6 @@ package com.vivy.shortener.exception;
 
 import com.vivy.shortener.exception.base.ExceptionCodes;
 import com.vivy.shortener.exception.base.ShortenerBaseException;
-import lombok.Getter;
-import lombok.With;
 
 public class UrlNotFoundException extends ShortenerBaseException {
 
