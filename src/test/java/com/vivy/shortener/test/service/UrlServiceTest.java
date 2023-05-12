@@ -3,6 +3,7 @@ package com.vivy.shortener.test.service;
 import com.vivy.shortener.UrlShortenerApplication;
 import com.vivy.shortener.exception.BigUrlException;
 import com.vivy.shortener.exception.InvalidUrlException;
+import com.vivy.shortener.exception.UrlNotFoundException;
 import com.vivy.shortener.service.url.UrlCache;
 import com.vivy.shortener.service.url.UrlService;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,7 @@ import reactor.core.publisher.Mono;
 import java.util.Optional;
 
 import static com.vivy.shortener.test.service.TestData.TEST_ORIGINAL_URL;
+import static com.vivy.shortener.test.util.TestUtil.createBigString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -60,6 +62,12 @@ public class UrlServiceTest {
     }
 
     @Test
+    public void testGetOriginalUrlByNotExistsUrlId() {
+        Mockito.when(mockCache.getUrl(any())).thenReturn(Mono.just(Optional.empty()));
+        assertThrows(UrlNotFoundException.class, () -> urlService.getOriginalUrlByUrlId("1234abc").block());
+    }
+
+    @Test
     public void testUrlCache() {
 
         Mockito.when(mockCache.saveUrl(any(), any())).thenReturn(Mono.just(true));
@@ -91,9 +99,7 @@ public class UrlServiceTest {
 
     @Test
     public void testInvalidOriginalUrlThrowsException() {
-        assertThrows(InvalidUrlException.class, () -> {
-            urlService.saveUrl("invalid_url").block();
-        });
+        assertThrows(InvalidUrlException.class, () -> urlService.saveUrl("invalid_url").block());
     }
 
     @Test
@@ -101,15 +107,6 @@ public class UrlServiceTest {
         assertThrows(BigUrlException.class, () -> {
             urlService.saveUrl("https://www.google.com?q=" + createBigString('s', 4096)).block();
         });
-    }
-
-
-    private String createBigString(char c, int size) {
-        StringBuilder builder = new StringBuilder(size);
-        for (int i = 0; i < size; i++) {
-            builder.append(c);
-        }
-        return builder.toString();
     }
 
 

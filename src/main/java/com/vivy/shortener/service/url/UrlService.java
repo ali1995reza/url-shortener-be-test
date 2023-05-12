@@ -82,7 +82,7 @@ public class UrlService {
                         return getOriginalUrlByUrlIdFromRepositoryAndPutInCache(urlId);
                     }
                 })
-                .map(url -> url.orElseThrow(() -> new UrlNotFoundException().withUrlId(urlId)));
+                .map(url -> url.orElseThrow(()->new UrlNotFoundException("Url not found")));
     }
 
     public Mono<Boolean> deleteUrlByUrlId(String urlId) {
@@ -118,7 +118,7 @@ public class UrlService {
 
     private Mono<Optional<String>> saveInCache(String urlId, Optional<String> originalUrl) {
         if (originalUrl.isEmpty()) {
-            return Mono.empty();
+            return Mono.just(originalUrl);
         }
         return urlCache.saveUrl(urlId, originalUrl.get())
                 .onErrorReturn(err -> {

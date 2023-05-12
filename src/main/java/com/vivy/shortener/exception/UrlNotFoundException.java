@@ -5,11 +5,7 @@ import com.vivy.shortener.exception.base.ShortenerBaseException;
 import lombok.Getter;
 import lombok.With;
 
-@With
-@Getter
 public class UrlNotFoundException extends ShortenerBaseException {
-
-    private String urlId;
 
     public UrlNotFoundException() {
         super(ExceptionCodes.URL_NOT_FOUND);
